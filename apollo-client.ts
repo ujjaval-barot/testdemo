@@ -1,7 +1,6 @@
 import {ApolloClient, createHttpLink, InMemoryCache} from '@apollo/client';
 import {setContext} from '@apollo/client/link/context';
 const space = process.env.CONTENTFUL_SPACE_ID;
-const nodeEnv = process.env.NODE_ENV;
 
 const httpLink = createHttpLink({
   uri: `https://graphql.contentful.com/content/v1/spaces/${space}/environments/stage`,
