@@ -1,0 +1,25 @@
+diff --git a/src/utils/getDefaultStaticProps.ts b/src/utils/getDefaultStaticProps.ts
+index 3739cad..594a495 100644
+--- a/src/utils/getDefaultStaticProps.ts
++++ b/src/utils/getDefaultStaticProps.ts
+@@ -1,4 +1,4 @@
+-import {GetStaticPropsResult} from 'next';
++import {GetStaticPropsResult, GetStaticProps} from 'next';
+ import {
+   ContentfulPageResponse,
+   DefaultPageProps,
+@@ -54,12 +54,13 @@ export default async function getDefaulStaticProps<T>(
+     copyright: {json: {}},
+   };
+ 
+-  const context: {props: DefaultPageProps} = {
++  const context: {props: DefaultPageProps; revalidate: number} = {
+     props: {
+       navHeaderData,
+       navFooterData,
+       ...customProps,
+     },
++    revalidate: 60,
+   };
+ 
+   try {

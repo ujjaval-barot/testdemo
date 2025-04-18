@@ -1,0 +1,33 @@
+export const typography = {
+  primaryFontFamily: 'Sharp Grotesk, serif',
+  secondaryFontFamily: 'Space Grotesk, sans-serif',
+  fontSize: {
+    extraTiny: 10,
+    tiny: 12,
+    extraSmall: 14,
+    small: 16,
+    medium: 18,
+    large: 20,
+    larger: 24,
+    extraLarge: 30,
+    extraExtraLarge: 34,
+    huge: 40,
+    extraHuge: 54,
+    gigantic: 60,
+    extraGigantic: 80,
+  },
+  fontWeight: {
+    thin: 300,
+    semiThin: 400,
+    regular: 500,
+    semiBold: 600,
+    bold: 700,
+  },
+  lineHeight: {
+    extraSmall: 1.13,
+    small: 1.28,
+    medium: 24,
+    lessLarge: 21,
+    large: 36,
+  },
+};
