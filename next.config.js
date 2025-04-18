@@ -3,7 +3,12 @@
 require('dotenv').config();
 
 const {PHASE_DEVELOPMENT_SERVER, PHASE_PRODUCTION_BUILD} = require('next/constants');
-const {NEXT_TRUSTED_DOMAINS, CONTENTFUL_SPACE_ID, CONTENTFUL_ACCESS_TOKEN, TWITTER_APP_ACCESS_TOKEN} = process.env;
+const {
+  NEXT_TRUSTED_DOMAINS,
+  CONTENTFUL_SPACE_ID,
+  CONTENTFUL_ACCESS_TOKEN,
+  TWITTER_APP_ACCESS_TOKEN,
+} = process.env;
 
 module.exports = phase => {
   const isDev = phase === PHASE_DEVELOPMENT_SERVER || process.env.NODE_ENV.includes('dev');

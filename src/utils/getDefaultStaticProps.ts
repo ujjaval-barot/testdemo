@@ -20,7 +20,9 @@ const formatPageData = (data: ContentfulPageResponse): PageContentProps => {
 
   return {
     seo: {...item},
-    contentBlocksCollection: item.linkedFrom.pageCollection.items.flatMap(i => i.contentBlocksCollection.items),
+    contentBlocksCollection: item.linkedFrom.pageCollection.items.flatMap(
+      i => i.contentBlocksCollection.items
+    ),
   };
 };
 
@@ -47,6 +49,7 @@ export default async function getDefaulStaticProps<T>(
     ctaLink: undefined,
     linksCollection: {items: []},
   };
+
   let navFooterData: NavigationFooter = {
     footerLinkCollection: {items: []},
     socialLinksCollection: {items: []},
@@ -64,8 +67,31 @@ export default async function getDefaulStaticProps<T>(
   };
 
   try {
-    navHeaderData = (await getHeaderData())?.data?.siteHeaderCollection?.items?.[0];
-    navFooterData = (await getFooterData())?.data?.siteFooterCollection?.items?.[0];
+    if (!process.env.CONTENTFUL_ACCESS_TOKEN || !process.env.CONTENTFUL_SPACE_ID) {
+      console.error('Missing Contentful credentials');
+      return context;
+    }
+
+    const headerData = (await getHeaderData())?.data?.siteHeaderCollection?.items?.[0];
+    const footerData = (await getFooterData())?.data?.siteFooterCollection?.items?.[0];
+
+    if (headerData) {
+      navHeaderData = {
+        linkHome: headerData.linkHome || '/',
+        ctaText: headerData.ctaText || '',
+        ctaLink: headerData.ctaLink || '',
+        linksCollection: headerData.linksCollection || {items: []},
+      };
+    }
+
+    if (footerData) {
+      navFooterData = {
+        footerLinkCollection: footerData.footerLinkCollection || {items: []},
+        socialLinksCollection: footerData.socialLinksCollection || {items: []},
+        locationInfo: footerData.locationInfo || {json: {}},
+        copyright: footerData.copyright || {json: {}},
+      };
+    }
 
     context.props.navHeaderData = navHeaderData;
     context.props.navFooterData = navFooterData;
@@ -73,17 +99,19 @@ export default async function getDefaulStaticProps<T>(
     if (pageSlug) {
       const pageData = await getPageBySlug(pageSlug, contentBlockLimit);
 
-      if (Boolean(pageData?.data?.seoCollection?.items[0]?.linkedFrom?.pageCollection?.items?.length)) {
+      if (
+        Boolean(pageData?.data?.seoCollection?.items[0]?.linkedFrom?.pageCollection?.items?.length)
+      ) {
         context.props.pageData = formatPageData(pageData.data);
-      } else {
-        return {
-          notFound: true,
-        };
       }
     } else if (articleSlug) {
       const articleData = await getArticleBySlug(articleSlug);
 
-      if (Boolean(articleData?.data?.seoCollection?.items[0]?.linkedFrom?.articleCollection?.items?.length)) {
+      if (
+        Boolean(
+          articleData?.data?.seoCollection?.items[0]?.linkedFrom?.articleCollection?.items?.length
+        )
+      ) {
         const seo = articleData.data.seoCollection.items[0];
         const data = seo.linkedFrom?.articleCollection?.items?.[0];
 
@@ -91,14 +119,10 @@ export default async function getDefaulStaticProps<T>(
           seo: {...seo},
           content: {...data},
         };
-      } else {
-        return {
-          notFound: true,
-        };
       }
     }
   } catch (error) {
-    console.error({error});
+    console.error('Error fetching data:', error);
   }
 
   return context;
